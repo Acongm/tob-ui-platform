@@ -15,6 +15,7 @@
     "@storybook/react-vite": "^8.0.0",
     "@storybook/test": "^8.0.0",
     "@tob-ui/ui-bridge": "workspace:*",
+    "@tob-ui/ui-meta": "workspace:*",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "storybook": "^8.0.0"
