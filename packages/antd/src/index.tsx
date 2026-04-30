@@ -1,5 +1,13 @@
 import type { ReactNode } from 'react';
-import type { DatePickerProps, DrawerProps, FormProps, ModalProps, SelectProps, UploadProps } from 'antd';
+import type {
+  DatePickerProps,
+  DrawerProps,
+  FormItemProps,
+  FormProps,
+  ModalProps,
+  SelectProps,
+  UploadProps
+} from 'antd';
 import {
   ConfigProvider,
   DatePicker as AntdDatePicker,
@@ -23,6 +31,10 @@ export function Form(props: FormProps) {
   return <AntdForm {...props} />;
 }
 
+export function FormItem(props: FormItemProps) {
+  return <AntdForm.Item {...props} />;
+}
+
 export function Modal(props: ModalProps) {
   return <AntdModal {...props} />;
 }
@@ -35,16 +47,20 @@ export function DatePicker(props: DatePickerProps) {
   return <AntdDatePicker {...props} />;
 }
 
-export function Select<ValueType = unknown, OptionType extends Record<string, unknown> = Record<string, unknown>>(
-  props: SelectProps<ValueType, OptionType>
-) {
-  return <AntdSelect<ValueType, OptionType> {...props} />;
+export function Select(props: SelectProps) {
+  return <AntdSelect {...props} />;
 }
 
 export function Upload(props: UploadProps) {
   return <AntdUpload {...props} />;
 }
 
-export const FormItem = AntdForm.Item;
-
-export type { DatePickerProps, DrawerProps, FormProps, ModalProps, SelectProps, UploadProps } from 'antd';
+export type {
+  DatePickerProps,
+  DrawerProps,
+  FormItemProps,
+  FormProps,
+  ModalProps,
+  SelectProps,
+  UploadProps
+} from 'antd';
