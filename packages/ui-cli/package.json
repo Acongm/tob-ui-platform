@@ -13,6 +13,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
+    "@tob-ui/ui-meta": "workspace:*",
     "tsx": "^4.7.1"
   },
   "devDependencies": {
