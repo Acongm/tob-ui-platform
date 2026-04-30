@@ -24,13 +24,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile=false
 
-      - name: Typecheck
+      - name: Build packages
+        run: pnpm build
+
+      - name: Typecheck after build
         run: pnpm typecheck
 
-      - name: Build
-        run: pnpm build
+      - name: Smoke test CLI
+        run: node packages/ui-cli/dist/index.js list --format json
