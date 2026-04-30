@@ -1,0 +1,9 @@
+{
+  "name": "@tob-ui/ai-skill",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "files": [
+    "SKILL.md"
+  ]
+}
