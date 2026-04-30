@@ -21,7 +21,7 @@ function print(value: unknown) {
 }
 
 function help() {
-  print(`tob-ui commands:\n\n  list [--format json]\n  info <Component> [--format json]\n  recipe <name> [--format json]\n  suggest <requirement> [--format json]\n  lint <dir> [--format json]\n  usage <dir> [--format json]\n`);
+  print(`tob-ui commands:\n\n  list [--format json]\n  info <Component> [--format json]\n  recipe <name> [--format json]\n  suggest <requirement> [--format json]\n  rules [--format json]\n  lint <dir> [--format json]\n  usage <dir> [--format json]\n  doctor <project-dir> [--format json]\n`);
 }
 
 function list() {
@@ -46,6 +46,10 @@ function recipe(name: string | undefined) {
     return;
   }
   print(target);
+}
+
+function rules() {
+  print({ forbiddenImportRules });
 }
 
 function suggest(requirement: string | undefined) {
@@ -149,6 +153,56 @@ function usage(dir = 'src') {
   });
 }
 
+function readPackageJson(projectDir: string) {
+  const path = join(projectDir, 'package.json');
+  if (!existsSync(path)) return null;
+  return JSON.parse(readFileSync(path, 'utf8')) as {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    scripts?: Record<string, string>;
+  };
+}
+
+function hasDependency(pkg: ReturnType<typeof readPackageJson>, name: string) {
+  return Boolean(pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]);
+}
+
+function doctor(projectDir = '.') {
+  const pkg = readPackageJson(projectDir);
+  if (!pkg) {
+    print({ ok: false, projectDir, checks: [{ name: 'package.json', ok: false, message: 'package.json not found.' }] });
+    process.exitCode = 1;
+    return;
+  }
+
+  const checks = [
+    {
+      name: 'ui-bridge dependency',
+      ok: hasDependency(pkg, '@tob-ui/ui-bridge'),
+      message: 'Business apps should depend on @tob-ui/ui-bridge as the governed import entry.'
+    },
+    {
+      name: 'eslint plugin dependency',
+      ok: hasDependency(pkg, '@tob-ui/eslint-plugin-ui-bridge'),
+      message: 'Add @tob-ui/eslint-plugin-ui-bridge to enforce no-raw-ui-import.'
+    },
+    {
+      name: 'ui-cli dependency',
+      ok: hasDependency(pkg, '@tob-ui/ui-cli'),
+      message: 'Add @tob-ui/ui-cli to let developers and AI agents query components and recipes locally.'
+    },
+    {
+      name: 'lint script',
+      ok: Boolean(pkg.scripts?.lint),
+      message: 'Add a lint script and include @tob-ui/ui-bridge/no-raw-ui-import.'
+    }
+  ];
+
+  const ok = checks.every(check => check.ok);
+  print({ ok, projectDir, checks });
+  if (!ok) process.exitCode = 1;
+}
+
 switch (command) {
   case 'list':
     list();
@@ -159,6 +213,9 @@ switch (command) {
   case 'recipe':
     recipe(args[1]);
     break;
+  case 'rules':
+    rules();
+    break;
   case 'suggest':
     suggest(args.slice(1).filter(arg => arg !== '--format' && arg !== 'json').join(' '));
     break;
@@ -167,6 +224,9 @@ switch (command) {
     break;
   case 'usage':
     usage(args[1] ?? 'src');
+    break;
+  case 'doctor':
+    doctor(args[1] ?? '.');
     break;
   default:
     help();
