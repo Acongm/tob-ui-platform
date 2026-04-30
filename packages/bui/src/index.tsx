@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+export { buiAdapters } from './adapters/backstage-ui';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
@@ -39,6 +40,7 @@ export function Button({ children, variant = 'secondary', loading, disabled, onC
       type="button"
       disabled={disabled || loading}
       onClick={onClick}
+      data-tob-bui-adapter="Button"
       style={{
         minHeight: 36,
         padding: '0 16px',
@@ -65,6 +67,7 @@ export type CardProps = {
 export function Card({ title, children, extra }: CardProps) {
   return (
     <section
+      data-tob-bui-adapter="Card"
       style={{
         background: 'var(--tob-color-surface, #fff)',
         border: '1px solid var(--tob-color-border, #d4e9e2)',
@@ -93,5 +96,12 @@ export type StackProps = {
 };
 
 export function Stack({ children, gap = 16, direction = 'column', align, justify }: StackProps) {
-  return <div style={{ display: 'flex', flexDirection: direction, gap, alignItems: align, justifyContent: justify }}>{children}</div>;
+  return (
+    <div
+      data-tob-bui-adapter="Stack"
+      style={{ display: 'flex', flexDirection: direction, gap, alignItems: align, justifyContent: justify }}
+    >
+      {children}
+    </div>
+  );
 }
