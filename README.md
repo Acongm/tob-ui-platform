@@ -85,9 +85,18 @@ import { Button } from '@backstage/ui';
 
 ## BUI-first and AntD-assisted
 
-- `@tob-ui/bui` is the primary direction and should gradually replace placeholder implementations with real Backstage UI / BUI-based components.
+- `@tob-ui/bui` is the primary direction and exposes stable ToB-facing APIs.
+- `@tob-ui/bui` currently uses local fallback wrappers for `Button`, `Card` and `Stack`; these wrappers are tracked by `buiAdapters` and marked with `data-tob-bui-adapter`.
+- `@backstage/ui` is declared as an optional peer dependency until the exact BUI package version and component API are finalized.
 - `@tob-ui/antd` is the auxiliary package for mature AntD capabilities.
 - `@tob-ui/ui-bridge` fuses both into a single public dependency package.
+
+Current BUI fallback exports:
+
+- `Button`
+- `Card`
+- `Stack`
+- `buiAdapters`
 
 Current AntD-assisted exports:
 
@@ -138,4 +147,6 @@ Later it can ingest the full token definition from `https://getdesign.md/starbuc
 
 ## Current Status
 
-This PR completes the architecture skeleton and the first usable package layout. The next work is to replace placeholder BUI components with real Backstage UI / BUI-based implementations and harden package publishing outputs.
+This PR completes the architecture skeleton and the first usable package layout. It now includes a BUI adapter registry, an AntD-assisted package, a fused bridge package and three documentation entry points.
+
+The main remaining work is replacing the `@tob-ui/bui` fallback wrappers with real Backstage UI / BUI-based implementations and hardening package publishing outputs.
