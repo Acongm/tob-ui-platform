@@ -18,6 +18,7 @@ BUI 二开融合层 + AntD/MUI 迁移治理 + 组件元数据 + 类 `antd-cli` �
 packages/
   bui/                         # BUI 二开组件入口，MVP 先放轻量占位组件
   ui-bridge/                   # 业务项目统一 import 入口
+  ui-meta/                     # 共享组件元数据、recipe、import 禁用规则
   theme/                       # Starbucks-inspired tokens + BUI/AntD adapter
   ui-cli/                      # 类 antd-cli 的组件知识查询、usage 和 lint 工具
   eslint-plugin-ui-bridge/     # import 治理 ESLint 插件
@@ -32,6 +33,32 @@ docs/
   component-governance.md
   ai-codegen-workflow.md
 ```
+
+## 共享元数据层
+
+`@tob-ui/ui-meta` 是后续治理的核心数据源：
+
+```txt
+@tob-ui/ui-meta
+  -> @tob-ui/ui-cli
+  -> @tob-ui/eslint-plugin-ui-bridge
+  -> @tob-ui/storybook
+  -> @tob-ui/ai-skill / future MCP
+```
+
+它当前导出：
+
+```ts
+import {
+  components,
+  recipes,
+  forbiddenImportRules,
+  findComponent,
+  findRecipe,
+} from '@tob-ui/ui-meta';
+```
+
+这样可以避免 CLI、ESLint、Storybook、AI 文档各维护一套重复规则。
 
 ## 快速开始
 
@@ -48,6 +75,7 @@ pnpm --filter @tob-ui/ui-cli start -- list --format json
 pnpm --filter @tob-ui/ui-cli start -- info Button --format json
 pnpm --filter @tob-ui/ui-cli start -- recipe crud-page --format json
 pnpm --filter @tob-ui/ui-cli start -- suggest "用户管理列表页" --format json
+pnpm --filter @tob-ui/ui-cli start -- suggest "新增用户弹窗表单" --format json
 pnpm --filter @tob-ui/ui-cli start -- lint apps/playground/src --format json
 pnpm --filter @tob-ui/ui-cli start -- usage apps/playground/src --format json
 ```
@@ -78,6 +106,16 @@ import { Button } from '@backstage/ui';
 - `Upload`
 
 这些组件短期可以复用 AntD 底层实现，但业务项目仍然从 `@tob-ui/ui-bridge` 导入，避免 AntD API 直接扩散到业务层。
+
+## Storybook 策略
+
+Storybook 当前包含：
+
+- `UI Bridge/Button`
+- `Recipes/CrudPage`
+- `Governance/Metadata Overview`
+
+其中 `Governance/Metadata Overview` 直接读取 `@tob-ui/ui-meta`，用于证明“人看的文档”和“AI/CLI/ESLint 用的数据”来自同一份源数据。
 
 ## 主题策略
 
@@ -113,6 +151,6 @@ import { Button } from '@backstage/ui';
 
 1. 用真实 Backstage UI / BUI 组件替换 `packages/bui` 的占位实现。
 2. 将 `ui-bridge` 的 planned AntD adapters 替换成真实 Form、Modal、Drawer、DatePicker、Upload、Select 实现。
-3. 将 Storybook 和 `ui-cli` 进一步共享组件 meta/recipe 数据源。
-4. 增加 MCP server，供 Codex、Claude、Cursor 直接查询组件知识。
-5. 增加 codemod：MUI v4 / AntD 核心组件迁移到 `@tob-ui/ui-bridge`。
+3. 增加 MCP server，供 Codex、Claude、Cursor 直接查询组件知识。
+4. 增加 codemod：MUI v4 / AntD 核心组件迁移到 `@tob-ui/ui-bridge`。
+5. 将 Storybook 的组件文档进一步自动化读取 `ui-meta`，生成治理表格和组件规则说明。
