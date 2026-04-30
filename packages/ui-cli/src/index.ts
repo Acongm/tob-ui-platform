@@ -21,7 +21,7 @@ function print(value: unknown) {
 }
 
 function help() {
-  print(`tob-ui commands:\n\n  list [--format json]\n  info <Component> [--format json]\n  recipe <name> [--format json]\n  suggest <requirement> [--format json]\n  lint <dir> [--format json]\n`);
+  print(`tob-ui commands:\n\n  list [--format json]\n  info <Component> [--format json]\n  recipe <name> [--format json]\n  suggest <requirement> [--format json]\n  lint <dir> [--format json]\n  usage <dir> [--format json]\n`);
 }
 
 function list() {
@@ -80,6 +80,23 @@ function walk(dir: string): string[] {
   });
 }
 
+function collectImports(files: string[]) {
+  const imports: Array<{ file: string; source: string; names: string[] }> = [];
+  const importRegex = /import\s*\{([^}]+)\}\s*from\s*['"]([^'"]+)['"]/g;
+
+  for (const file of files) {
+    const content = readFileSync(file, 'utf8');
+    for (const match of content.matchAll(importRegex)) {
+      const names = match[1]
+        .split(',')
+        .map(name => name.trim().split(/\s+as\s+/i)[0]?.trim())
+        .filter(Boolean) as string[];
+      imports.push({ file, source: match[2], names });
+    }
+  }
+  return imports;
+}
+
 function lint(dir = 'src') {
   const files = walk(dir);
   const violations = files.flatMap(file => {
@@ -103,6 +120,30 @@ function lint(dir = 'src') {
   if (violations.length > 0) process.exitCode = 1;
 }
 
+function usage(dir = 'src') {
+  const files = walk(dir);
+  const imports = collectImports(files);
+  const groups = {
+    bridge: imports.filter(item => item.source === '@tob-ui/ui-bridge'),
+    bui: imports.filter(item => item.source === '@tob-ui/bui' || item.source === '@backstage/ui'),
+    antd: imports.filter(item => item.source === 'antd' || item.source.startsWith('antd/')),
+    muiV4: imports.filter(item => item.source === '@material-ui/core' || item.source.startsWith('@material-ui/')),
+    other: imports.filter(item => !['@tob-ui/ui-bridge', '@tob-ui/bui', '@backstage/ui', 'antd', '@material-ui/core'].includes(item.source) && !item.source.startsWith('antd/') && !item.source.startsWith('@material-ui/'))
+  };
+
+  print({
+    filesScanned: files.length,
+    totals: {
+      bridge: groups.bridge.length,
+      bui: groups.bui.length,
+      antd: groups.antd.length,
+      muiV4: groups.muiV4.length,
+      other: groups.other.length
+    },
+    details: groups
+  });
+}
+
 switch (command) {
   case 'list':
     list();
@@ -118,6 +159,9 @@ switch (command) {
     break;
   case 'lint':
     lint(args[1] ?? 'src');
+    break;
+  case 'usage':
+    usage(args[1] ?? 'src');
     break;
   default:
     help();
