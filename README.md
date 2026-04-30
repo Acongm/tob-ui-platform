@@ -68,6 +68,30 @@ pnpm --filter @tob-ui/docs dev
 pnpm --filter @tob-ui/playground dev
 ```
 
+## Build and Release
+
+```bash
+pnpm typecheck
+pnpm build
+pnpm changeset
+pnpm version
+pnpm release
+```
+
+The repository uses Changesets and GitHub Actions CI. Public packages include `exports`, `files` and `publishConfig.access = public` so they have a clear publishing shape.
+
+Current publishable packages:
+
+- `@tob-ui/bui`
+- `@tob-ui/antd`
+- `@tob-ui/ui-bridge`
+- `@tob-ui/theme`
+- `@tob-ui/ui-meta`
+- `@tob-ui/ui-cli`
+- `@tob-ui/eslint-plugin-ui-bridge`
+- `@tob-ui/ai-skill`
+- `@tob-ui/backstage-ui-docs-plugin`
+
 ## Business Import Policy
 
 Business projects should prefer:
@@ -147,6 +171,6 @@ Later it can ingest the full token definition from `https://getdesign.md/starbuc
 
 ## Current Status
 
-This PR completes the architecture skeleton and the first usable package layout. It now includes a BUI adapter registry, an AntD-assisted package, a fused bridge package and three documentation entry points.
+This PR completes the architecture skeleton and the first usable package layout. It now includes a BUI adapter registry, an AntD-assisted package, a fused bridge package, three documentation entry points, Changesets configuration and CI.
 
-The main remaining work is replacing the `@tob-ui/bui` fallback wrappers with real Backstage UI / BUI-based implementations and hardening package publishing outputs.
+The main remaining work is replacing the `@tob-ui/bui` fallback wrappers with real Backstage UI / BUI-based implementations and hardening compiled package output if publishing should emit `dist` instead of source files.
