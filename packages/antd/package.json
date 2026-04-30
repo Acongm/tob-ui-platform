@@ -1,0 +1,24 @@
+{
+  "name": "@tob-ui/antd",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.tsx",
+  "types": "./src/index.tsx",
+  "scripts": {
+    "build": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@tob-ui/theme": "workspace:*"
+  },
+  "peerDependencies": {
+    "antd": ">=5",
+    "react": ">=18"
+  },
+  "devDependencies": {
+    "antd": "^5.23.0",
+    "typescript": "^5.4.2"
+  }
+}
