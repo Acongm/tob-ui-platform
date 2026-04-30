@@ -6,6 +6,12 @@
   "bin": {
     "tob-ui": "./src/index.ts"
   },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "tsx src/index.ts",
     "build": "tsc -p tsconfig.json --noEmit",
