@@ -19,12 +19,13 @@ packages/
   bui/                         # BUI 二开组件入口，MVP 先放轻量占位组件
   ui-bridge/                   # 业务项目统一 import 入口
   theme/                       # Starbucks-inspired tokens + BUI/AntD adapter
-  ui-cli/                      # 类 antd-cli 的组件知识查询和 lint 工具
+  ui-cli/                      # 类 antd-cli 的组件知识查询、usage 和 lint 工具
   eslint-plugin-ui-bridge/     # import 治理 ESLint 插件
   ai-skill/                    # 给 Codex / Claude / Cursor 的 SKILL.md
 
 apps/
   playground/                  # Vite playground，验证 bridge 组件组合
+  storybook/                   # Storybook 组件文档与 recipe 展示
 
 docs/
   architecture.md
@@ -37,6 +38,7 @@ docs/
 ```bash
 pnpm install
 pnpm --filter @tob-ui/playground dev
+pnpm --filter @tob-ui/storybook dev
 ```
 
 ## CLI MVP
@@ -47,6 +49,7 @@ pnpm --filter @tob-ui/ui-cli start -- info Button --format json
 pnpm --filter @tob-ui/ui-cli start -- recipe crud-page --format json
 pnpm --filter @tob-ui/ui-cli start -- suggest "用户管理列表页" --format json
 pnpm --filter @tob-ui/ui-cli start -- lint apps/playground/src --format json
+pnpm --filter @tob-ui/ui-cli start -- usage apps/playground/src --format json
 ```
 
 ## 业务推荐 import
@@ -62,6 +65,19 @@ import { Button, Table, Form } from 'antd';
 import { Button as MuiButton } from '@material-ui/core';
 import { Button } from '@backstage/ui';
 ```
+
+## AntD adapter 策略
+
+`ui-bridge` 已经预留 AntD adapter registry：
+
+- `Form`
+- `Modal`
+- `Drawer`
+- `DatePicker`
+- `Select`
+- `Upload`
+
+这些组件短期可以复用 AntD 底层实现，但业务项目仍然从 `@tob-ui/ui-bridge` 导入，避免 AntD API 直接扩散到业务层。
 
 ## 主题策略
 
@@ -88,6 +104,7 @@ import { Button } from '@backstage/ui';
   -> tob-ui info
   -> 生成代码
   -> tob-ui lint
+  -> tob-ui usage
 ```
 
 详见 `docs/ai-codegen-workflow.md`。
@@ -95,8 +112,7 @@ import { Button } from '@backstage/ui';
 ## 下一步路线
 
 1. 用真实 Backstage UI / BUI 组件替换 `packages/bui` 的占位实现。
-2. 在 `ui-bridge` 增加 AntD adapter：Form、Modal、Drawer、DatePicker、Upload、Select。
-3. 将 Storybook 接入组件 meta 和 recipe，做到“人看 Storybook，AI 查 CLI”。
-4. 增加 `usage` 命令统计项目内 AntD/MUI/BUI 使用比例。
-5. 增加 MCP server，供 Codex、Claude、Cursor 直接查询组件知识。
-6. 增加 codemod：MUI v4 / AntD 核心组件迁移到 `@tob-ui/ui-bridge`。
+2. 将 `ui-bridge` 的 planned AntD adapters 替换成真实 Form、Modal、Drawer、DatePicker、Upload、Select 实现。
+3. 将 Storybook 和 `ui-cli` 进一步共享组件 meta/recipe 数据源。
+4. 增加 MCP server，供 Codex、Claude、Cursor 直接查询组件知识。
+5. 增加 codemod：MUI v4 / AntD 核心组件迁移到 `@tob-ui/ui-bridge`。
