@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { createElement, type ComponentType, type ReactNode } from 'react';
 import type {
   DatePickerProps,
   DrawerProps,
@@ -23,36 +23,44 @@ export type AntdThemeProviderProps = {
   children?: ReactNode;
 };
 
+const FormComponent = AntdForm as unknown as ComponentType<FormProps>;
+const FormItemComponent = AntdForm.Item as unknown as ComponentType<FormItemProps>;
+const ModalComponent = AntdModal as unknown as ComponentType<ModalProps>;
+const DrawerComponent = AntdDrawer as unknown as ComponentType<DrawerProps>;
+const DatePickerComponent = AntdDatePicker as unknown as ComponentType<DatePickerProps>;
+const SelectComponent = AntdSelect as unknown as ComponentType<SelectProps>;
+const UploadComponent = AntdUpload as unknown as ComponentType<UploadProps>;
+
 export function AntdThemeProvider({ children }: AntdThemeProviderProps) {
   return <ConfigProvider theme={toAntdTheme(starbucksInspiredTokens)}>{children}</ConfigProvider>;
 }
 
 export function Form(props: FormProps) {
-  return <AntdForm {...props} />;
+  return createElement(FormComponent, props);
 }
 
 export function FormItem(props: FormItemProps) {
-  return <AntdForm.Item {...props} />;
+  return createElement(FormItemComponent, props);
 }
 
 export function Modal(props: ModalProps) {
-  return <AntdModal {...props} />;
+  return createElement(ModalComponent, props);
 }
 
 export function Drawer(props: DrawerProps) {
-  return <AntdDrawer {...props} />;
+  return createElement(DrawerComponent, props);
 }
 
 export function DatePicker(props: DatePickerProps) {
-  return <AntdDatePicker {...props} />;
+  return createElement(DatePickerComponent, props);
 }
 
 export function Select(props: SelectProps) {
-  return <AntdSelect {...props} />;
+  return createElement(SelectComponent, props);
 }
 
 export function Upload(props: UploadProps) {
-  return <AntdUpload {...props} />;
+  return createElement(UploadComponent, props);
 }
 
 export type {
