@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Button as BuiButton, Card, Stack, type ButtonProps as BuiButtonProps } from '@tob-ui/bui';
 import { starbucksInspiredTokens, toCssVariables } from '@tob-ui/theme';
 
@@ -81,7 +81,8 @@ export function StatusTag({ status = 'default', children }: StatusTagProps) {
 }
 
 export function ThemeProvider({ children }: { children?: ReactNode }) {
-  return <div style={toCssVariables(starbucksInspiredTokens)}>{children}</div>;
+  const cssVariables = toCssVariables(starbucksInspiredTokens) as CSSProperties;
+  return <div style={cssVariables}>{children}</div>;
 }
 
 export type SearchFormProps = {
