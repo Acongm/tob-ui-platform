@@ -10,6 +10,9 @@
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
+  "dependencies": {
+    "@tob-ui/ui-meta": "workspace:*"
+  },
   "peerDependencies": {
     "eslint": ">=8"
   }
