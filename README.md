@@ -303,7 +303,7 @@ pnpm version
 pnpm release
 ```
 
-The repository uses Changesets and GitHub Actions CI.
+The repository uses Changesets, GitHub Actions CI and tsup-based `dist` output for publishable packages.
 
 Before enabling real npm publishing, configure this repository secret:
 
@@ -349,4 +349,4 @@ Expected upgrade process:
 - `@tob-ui/bui` still uses local fallback wrappers for `Button`, `Card` and `Stack`.
 - Real Backstage UI / BUI adapters still need to replace the fallback wrappers after the exact upstream API is finalized.
 - The current token set is lightweight and should later be replaced or extended by the full Starbucks design token source.
-- Some package exports in main may still point to source files until the dist-build PR is fully merged.
+- The dist-build output is now handled in the `chore/dist-build-output` branch and should be merged before publishing packages.
