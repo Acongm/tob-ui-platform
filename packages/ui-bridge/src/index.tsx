@@ -4,6 +4,8 @@ import { starbucksInspiredTokens, toCssVariables } from '@tob-ui/theme';
 
 export type { ButtonVariant } from '@tob-ui/bui';
 export { Card, Stack };
+export { DatePicker, Drawer, Form, Modal, Select, Upload } from './adapter-components';
+export { antdAdapters } from './adapters/antd';
 
 export type ButtonProps = BuiButtonProps & {
   permission?: string;
