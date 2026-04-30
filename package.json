@@ -2,13 +2,20 @@
   "name": "tob-ui-platform",
   "private": true,
   "version": "0.1.0",
-  "description": "ToB UI governance platform for BUI, AntD, MUI migration and AI-guided component usage.",
+  "description": "Public ToB UI plugin package system: BUI-first, AntD-assisted, fused through ui-bridge.",
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck"
+    "typecheck": "pnpm -r typecheck",
+    "docs:dev": "pnpm --filter @tob-ui/docs dev",
+    "storybook:dev": "pnpm --filter @tob-ui/storybook dev",
+    "playground:dev": "pnpm --filter @tob-ui/playground dev",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "pnpm build && changeset publish"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.1",
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.69",
     "@types/react-dom": "^18.2.22",
