@@ -1,32 +1,49 @@
 # ToB UI Platform
 
-BUI 二开融合层 + AntD/MUI 迁移治理 + 组件元数据 + 类 `antd-cli` 的 AI 组件选择工具。
+Public UI plugin package system for ToB projects. The package model is **BUI-first**, **AntD-assisted**, and exported through a fused dependency package for business applications.
 
-## 项目目标
+## Package Model
 
-这个仓库不是单纯再造一个 UI 库，而是在 Backstage/BUI 二开、AntD 存量能力、MUI v4 legacy 迁移之间增加一层统一治理入口：
+```txt
+@tob-ui/bui
+  Primary component package, based on Backstage UI / BUI direction.
 
-- 统一业务项目 import 来源。
-- 统一 ToB 页面交互模式。
-- 统一主题 token 和多 UI 库适配。
-- 通过 CLI 给 AI agent 查询组件知识、recipe 和禁用规则。
-- 通过 lint/usage/doctor 逐步治理 AntD、MUI、BUI 混用问题。
+@tob-ui/antd
+  Auxiliary AntD package for complex form-driven widgets such as Form, Modal, Drawer, DatePicker, Select and Upload.
+
+@tob-ui/ui-bridge
+  Public fused dependency package. Business projects should import from this package instead of choosing between BUI and AntD directly.
+
+@tob-ui/theme
+  Shared design tokens and BUI/AntD theme adapters.
+
+@tob-ui/ui-meta
+  Shared component metadata and recipes for docs, CLI and AI usage.
+
+@tob-ui/ui-cli
+  Internal `antd-cli`-like component knowledge CLI for AI and developers.
+```
 
 ## Workspace
 
 ```txt
 packages/
-  bui/                         # BUI 二开组件入口，MVP 先放轻量占位组件
-  ui-bridge/                   # 业务项目统一 import 入口
-  ui-meta/                     # 共享组件元数据、recipe、import 禁用规则
-  theme/                       # Starbucks-inspired tokens + BUI/AntD adapter
-  ui-cli/                      # 类 antd-cli 的组件知识查询、usage、rules、doctor 和 lint 工具
-  eslint-plugin-ui-bridge/     # import 治理 ESLint 插件
-  ai-skill/                    # 给 Codex / Claude / Cursor 的 SKILL.md
+  bui/                         # BUI-first component package
+  antd/                        # AntD-assisted component package
+  ui-bridge/                   # fused public dependency package
+  ui-meta/                     # shared component metadata and recipes
+  theme/                       # Starbucks-inspired tokens + BUI/AntD adapters
+  ui-cli/                      # component knowledge CLI
+  eslint-plugin-ui-bridge/     # import governance ESLint plugin
+  ai-skill/                    # SKILL.md for Codex / Claude / Cursor
 
 apps/
-  playground/                  # Vite playground，验证 bridge 组件组合
-  storybook/                   # Storybook 组件文档与 recipe 展示
+  docs/                        # static public docs app
+  playground/                  # Vite playground
+  storybook/                   # Storybook component docs
+
+plugins/
+  backstage-ui-docs/           # Backstage plugin docs entry
 
 docs/
   architecture.md
@@ -34,38 +51,65 @@ docs/
   ai-codegen-workflow.md
 ```
 
-## 共享元数据层
+## Three Documentation Systems
 
-`@tob-ui/ui-meta` 是后续治理的核心数据源：
+This repository now contains three documentation entry points:
+
+1. `apps/storybook` — component-level docs and recipe stories.
+2. `apps/docs` — static public docs site for package overview and usage.
+3. `plugins/backstage-ui-docs` — Backstage plugin page for embedding UI docs into a Backstage portal.
+
+## Quick Start
+
+```bash
+pnpm install
+pnpm --filter @tob-ui/storybook dev
+pnpm --filter @tob-ui/docs dev
+pnpm --filter @tob-ui/playground dev
+```
+
+## Business Import Policy
+
+Business projects should prefer:
+
+```tsx
+import { Page, SearchForm, Table, Button, StatusTag, Form, Modal, DatePicker, Select } from '@tob-ui/ui-bridge';
+```
+
+Avoid new business code that directly chooses the underlying UI library:
+
+```tsx
+import { Button, Table, Form } from 'antd';
+import { Button } from '@backstage/ui';
+```
+
+## BUI-first and AntD-assisted
+
+- `@tob-ui/bui` is the primary direction and should gradually replace placeholder implementations with real Backstage UI / BUI-based components.
+- `@tob-ui/antd` is the auxiliary package for mature AntD capabilities.
+- `@tob-ui/ui-bridge` fuses both into a single public dependency package.
+
+Current AntD-assisted exports:
+
+- `Form`
+- `Modal`
+- `Drawer`
+- `DatePicker`
+- `Select`
+- `Upload`
+
+## Shared Metadata Layer
+
+`@tob-ui/ui-meta` is the shared source for component metadata, recipes and forbidden import rules.
 
 ```txt
 @tob-ui/ui-meta
   -> @tob-ui/ui-cli
   -> @tob-ui/eslint-plugin-ui-bridge
   -> @tob-ui/storybook
+  -> @tob-ui/docs
+  -> @tob-ui/backstage-ui-docs-plugin
   -> @tob-ui/ai-skill / future MCP
-```
-
-它当前导出：
-
-```ts
-import {
-  components,
-  recipes,
-  forbiddenImportRules,
-  findComponent,
-  findRecipe,
-} from '@tob-ui/ui-meta';
-```
-
-这样可以避免 CLI、ESLint、Storybook、AI 文档各维护一套重复规则。
-
-## 快速开始
-
-```bash
-pnpm install
-pnpm --filter @tob-ui/playground dev
-pnpm --filter @tob-ui/storybook dev
 ```
 
 ## CLI MVP
@@ -75,87 +119,23 @@ pnpm --filter @tob-ui/ui-cli start -- list --format json
 pnpm --filter @tob-ui/ui-cli start -- info Button --format json
 pnpm --filter @tob-ui/ui-cli start -- recipe crud-page --format json
 pnpm --filter @tob-ui/ui-cli start -- suggest "用户管理列表页" --format json
-pnpm --filter @tob-ui/ui-cli start -- suggest "新增用户弹窗表单" --format json
 pnpm --filter @tob-ui/ui-cli start -- rules --format json
 pnpm --filter @tob-ui/ui-cli start -- lint apps/playground/src --format json
 pnpm --filter @tob-ui/ui-cli start -- usage apps/playground/src --format json
 pnpm --filter @tob-ui/ui-cli start -- doctor . --format json
 ```
 
-## 业务推荐 import
+## Theme Strategy
 
-```tsx
-import { Page, SearchForm, Table, Button, StatusTag } from '@tob-ui/ui-bridge';
-```
-
-## 不推荐新业务代码直接 import
-
-```tsx
-import { Button, Table, Form } from 'antd';
-import { Button as MuiButton } from '@material-ui/core';
-import { Button } from '@backstage/ui';
-```
-
-## AntD adapter 策略
-
-`ui-bridge` 已经预留 AntD adapter registry：
-
-- `Form`
-- `Modal`
-- `Drawer`
-- `DatePicker`
-- `Select`
-- `Upload`
-
-这些组件短期可以复用 AntD 底层实现，但业务项目仍然从 `@tob-ui/ui-bridge` 导入，避免 AntD API 直接扩散到业务层。
-
-## Storybook 策略
-
-Storybook 当前包含：
-
-- `UI Bridge/Button`
-- `Recipes/CrudPage`
-- `Governance/Metadata Overview`
-
-其中 `Governance/Metadata Overview` 直接读取 `@tob-ui/ui-meta`，用于证明“人看的文档”和“AI/CLI/ESLint 用的数据”来自同一份源数据。
-
-## 主题策略
-
-当前 `@tob-ui/theme` 先基于 Starbucks 风格做轻量二次处理：
+Current `@tob-ui/theme` uses a lightweight Starbucks-inspired token set:
 
 - brand: `#006241`
 - background: `#f7f3ed`
 - text: `#1e3932`
 - border: `#d4e9e2`
 
-后续可以逐步接入 `https://getdesign.md/starbucks/design-md` 的完整 token，并输出：
+Later it can ingest the full token definition from `https://getdesign.md/starbucks/design-md` and emit CSS variables, BUI theme mapping and AntD `ConfigProvider` theme.
 
-- CSS variables
-- AntD `ConfigProvider` theme
-- BUI theme mapping
-- legacy MUI theme mapping
+## Current Status
 
-## AI 生成代码流程
-
-```txt
-进入项目
-  -> tob-ui doctor
-需求
-  -> tob-ui suggest
-  -> tob-ui recipe
-  -> tob-ui info
-  -> tob-ui rules
-  -> 生成代码
-  -> tob-ui lint
-  -> tob-ui usage
-```
-
-详见 `docs/ai-codegen-workflow.md`。
-
-## 下一步路线
-
-1. 用真实 Backstage UI / BUI 组件替换 `packages/bui` 的占位实现。
-2. 将 `ui-bridge` 的 planned AntD adapters 替换成真实 Form、Modal、Drawer、DatePicker、Upload、Select 实现。
-3. 增加 MCP server，供 Codex、Claude、Cursor 直接查询组件知识。
-4. 增加 codemod：MUI v4 / AntD 核心组件迁移到 `@tob-ui/ui-bridge`。
-5. 将 Storybook 的组件文档进一步自动化读取 `ui-meta`，生成治理表格和组件规则说明。
+This PR completes the architecture skeleton and the first usable package layout. The next work is to replace placeholder BUI components with real Backstage UI / BUI-based implementations and harden package publishing outputs.
