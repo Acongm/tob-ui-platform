@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { components, forbiddenImportRules, recipes } from './data';
+import { components, findComponent, findRecipe, forbiddenImportRules, recipes } from '@tob-ui/ui-meta';
 
 const args = process.argv.slice(2);
 const command = args[0] ?? 'help';
@@ -29,7 +29,7 @@ function list() {
 }
 
 function info(name: string | undefined) {
-  const component = components.find(item => item.name.toLowerCase() === String(name ?? '').toLowerCase());
+  const component = findComponent(String(name ?? ''));
   if (!component) {
     print({ error: `Component not found: ${name}`, available: components.map(item => item.name) });
     process.exitCode = 1;
@@ -39,7 +39,7 @@ function info(name: string | undefined) {
 }
 
 function recipe(name: string | undefined) {
-  const target = recipes.find(item => item.name === name);
+  const target = findRecipe(String(name ?? ''));
   if (!target) {
     print({ error: `Recipe not found: ${name}`, available: recipes.map(item => item.name) });
     process.exitCode = 1;
@@ -50,7 +50,12 @@ function recipe(name: string | undefined) {
 
 function suggest(requirement: string | undefined) {
   const text = String(requirement ?? '').toLowerCase();
-  const selected = text.includes('crud') || text.includes('列表') || text.includes('管理') || text.includes('新增') ? recipes[0] : recipes[1];
+  const selected = text.includes('弹窗') || text.includes('表单') || text.includes('modal')
+    ? recipes.find(item => item.name === 'modal-form') ?? recipes[0]
+    : text.includes('crud') || text.includes('列表') || text.includes('管理') || text.includes('新增')
+      ? recipes.find(item => item.name === 'crud-page') ?? recipes[0]
+      : recipes.find(item => item.name === 'search-table') ?? recipes[0];
+
   print({
     requirement,
     recommendedRecipe: selected.name,
