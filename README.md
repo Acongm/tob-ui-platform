@@ -10,7 +10,7 @@ BUI 二开融合层 + AntD/MUI 迁移治理 + 组件元数据 + 类 `antd-cli` �
 - 统一 ToB 页面交互模式。
 - 统一主题 token 和多 UI 库适配。
 - 通过 CLI 给 AI agent 查询组件知识、recipe 和禁用规则。
-- 通过 lint/usage 逐步治理 AntD、MUI、BUI 混用问题。
+- 通过 lint/usage/doctor 逐步治理 AntD、MUI、BUI 混用问题。
 
 ## Workspace
 
@@ -20,7 +20,7 @@ packages/
   ui-bridge/                   # 业务项目统一 import 入口
   ui-meta/                     # 共享组件元数据、recipe、import 禁用规则
   theme/                       # Starbucks-inspired tokens + BUI/AntD adapter
-  ui-cli/                      # 类 antd-cli 的组件知识查询、usage 和 lint 工具
+  ui-cli/                      # 类 antd-cli 的组件知识查询、usage、rules、doctor 和 lint 工具
   eslint-plugin-ui-bridge/     # import 治理 ESLint 插件
   ai-skill/                    # 给 Codex / Claude / Cursor 的 SKILL.md
 
@@ -76,8 +76,10 @@ pnpm --filter @tob-ui/ui-cli start -- info Button --format json
 pnpm --filter @tob-ui/ui-cli start -- recipe crud-page --format json
 pnpm --filter @tob-ui/ui-cli start -- suggest "用户管理列表页" --format json
 pnpm --filter @tob-ui/ui-cli start -- suggest "新增用户弹窗表单" --format json
+pnpm --filter @tob-ui/ui-cli start -- rules --format json
 pnpm --filter @tob-ui/ui-cli start -- lint apps/playground/src --format json
 pnpm --filter @tob-ui/ui-cli start -- usage apps/playground/src --format json
+pnpm --filter @tob-ui/ui-cli start -- doctor . --format json
 ```
 
 ## 业务推荐 import
@@ -136,10 +138,13 @@ Storybook 当前包含：
 ## AI 生成代码流程
 
 ```txt
+进入项目
+  -> tob-ui doctor
 需求
   -> tob-ui suggest
   -> tob-ui recipe
   -> tob-ui info
+  -> tob-ui rules
   -> 生成代码
   -> tob-ui lint
   -> tob-ui usage
