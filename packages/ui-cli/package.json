@@ -14,7 +14,7 @@
   },
   "scripts": {
     "start": "tsx src/index.ts",
-    "build": "tsup src/index.ts --format esm --dts --banner.js '#!/usr/bin/env node' --clean",
+    "build": "tsup src/index.ts --format esm --dts --clean",
     "lint": "tsc -p tsconfig.json --noEmit",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },

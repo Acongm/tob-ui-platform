@@ -4,9 +4,11 @@
   "version": "0.1.0",
   "description": "Public ToB UI plugin package system: BUI-first, AntD-assisted, fused through ui-bridge.",
   "scripts": {
-    "build": "pnpm -r build",
+    "build": "pnpm -r --filter './packages/*' --filter './plugins/*' build",
+    "build:apps": "pnpm -r --filter './apps/*' build",
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r --filter './packages/*' --filter './plugins/*' typecheck",
+    "typecheck:apps": "pnpm -r --filter './apps/*' typecheck",
     "docs:dev": "pnpm --filter @tob-ui/docs dev",
     "storybook:dev": "pnpm --filter @tob-ui/storybook dev",
     "playground:dev": "pnpm --filter @tob-ui/playground dev",

@@ -1,3 +1,6 @@
+import { components } from './components';
+import { recipes } from './recipes';
+
 export type {
   ComponentMeta,
   ComponentSource,
