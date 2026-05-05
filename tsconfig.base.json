@@ -15,8 +15,12 @@
     "isolatedModules": true,
     "baseUrl": ".",
     "paths": {
+      "@tob-ui/antd": ["packages/antd/src"],
       "@tob-ui/bui": ["packages/bui/src"],
+      "@tob-ui/eslint-plugin-ui-bridge": ["packages/eslint-plugin-ui-bridge/src"],
+      "@tob-ui/ui-cli": ["packages/ui-cli/src"],
       "@tob-ui/ui-bridge": ["packages/ui-bridge/src"],
+      "@tob-ui/ui-meta": ["packages/ui-meta/src"],
       "@tob-ui/theme": ["packages/theme/src"]
     }
   }

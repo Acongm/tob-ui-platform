@@ -1,0 +1,15 @@
+node_modules/
+.pnpm-store/
+
+coverage/
+*.tsbuildinfo
+
+apps/*/node_modules/
+packages/*/node_modules/
+plugins/*/node_modules/
+
+apps/*/dist/
+packages/*/dist/
+plugins/*/dist/
+
+apps/storybook/storybook-static/
