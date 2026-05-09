@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 融合 UI 项目讨论
+    url: https://github.com/Acongm/tob-ui-platform/discussions
+    about: 讨论方向、方案对比或非缺陷类问题，请优先使用 Discussions。
+

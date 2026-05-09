@@ -1,0 +1,92 @@
+name: "融合 UI 方向规划（Roadmap）"
+description: "用于明确融合 UI 包项目的目标方向、边界与阶段里程碑（中文）"
+title: "[方向规划] "
+labels:
+  - roadmap
+  - ui-bridge
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请使用中文填写。该 Issue 用于“定方向”，不是直接写实现细节。
+
+  - type: textarea
+    id: background
+    attributes:
+      label: 背景与问题
+      description: 说明为什么现在要推进该方向，当前痛点是什么。
+      placeholder: |
+        例如：业务代码仍有直接导入 antd / @backstage/ui 的情况，导致组件选型不一致，难以治理。
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-status
+    attributes:
+      label: 当前现状（请尽量具体）
+      description: 列出现有能力、已完成内容、已知限制或风险。
+      placeholder: |
+        - 已有包：@tob-ui/bui、@tob-ui/antd、@tob-ui/ui-bridge...
+        - 已有约束：业务代码应从 @tob-ui/ui-bridge 导入...
+        - 当前缺口：...
+    validations:
+      required: true
+
+  - type: textarea
+    id: goals
+    attributes:
+      label: 目标（目标要可验收）
+      description: 说明该方向最终要达到什么状态。
+      placeholder: |
+        - 目标 1：...
+        - 目标 2：...
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: 范围（包含 / 不包含）
+      description: 明确边界，避免任务扩散。
+      placeholder: |
+        包含：
+        - ...
+
+        不包含：
+        - ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: milestones
+    attributes:
+      label: 分阶段里程碑
+      description: 建议按短周期拆分，每个里程碑都可独立验证。
+      placeholder: |
+        - 里程碑 1（基础能力）：
+        - 里程碑 2（治理落地）：
+        - 里程碑 3（文档与推广）：
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 给出可被 CI、代码评审或文档检查验证的标准。
+      placeholder: |
+        - [ ] 验收项 1
+        - [ ] 验收项 2
+        - [ ] 验收项 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: references
+    attributes:
+      label: 相关链接
+      description: 相关 PR / 文档 / 历史 Issue / 讨论链接。
+      placeholder: |
+        - #3
+        - docs/architecture.md
+

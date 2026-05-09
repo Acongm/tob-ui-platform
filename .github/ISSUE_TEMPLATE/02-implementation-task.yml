@@ -1,0 +1,82 @@
+name: "融合 UI 实现任务（Implementation）"
+description: "用于落地具体实现，要求先关联方向规划 Issue（中文）"
+title: "[实现任务] "
+labels:
+  - implementation
+  - ui-bridge
+body:
+  - type: markdown
+    attributes:
+      value: |
+        请使用中文填写。该 Issue 对应“具体实现”，必须关联一个“方向规划”Issue。
+
+  - type: input
+    id: roadmap-issue
+    attributes:
+      label: 关联方向规划 Issue
+      description: 填写方向 Issue 编号或链接（如 #3）。
+      placeholder: "#3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation-plan
+    attributes:
+      label: 实现方案
+      description: 从架构、接口、迁移、兼容性角度描述方案。
+      placeholder: |
+        - 技术路径：
+        - 关键改动点：
+        - 兼容性影响：
+        - 回滚策略：
+    validations:
+      required: true
+
+  - type: textarea
+    id: task-breakdown
+    attributes:
+      label: 任务拆解
+      description: 将改动拆解为可执行小任务，便于 PR 分阶段提交。
+      placeholder: |
+        - [ ] 子任务 1
+        - [ ] 子任务 2
+        - [ ] 子任务 3
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation
+    attributes:
+      label: 多模型 / 多 Agent 交叉验证计划
+      description: 说明如何交叉验证设计与实现质量。
+      placeholder: |
+        - 评审维度：架构一致性 / API 稳定性 / 代码质量 / 安全性
+        - Agent A（模型X）：...
+        - Agent B（模型Y）：...
+        - 分歧处理机制：...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 验收标准
+      description: 明确完成定义（DoD）。
+      placeholder: |
+        - [ ] 代码实现完成
+        - [ ] 文档同步完成
+        - [ ] lint/typecheck/build 通过
+        - [ ] PR 中记录交叉验证结论
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: 风险与依赖
+      description: 记录依赖前置条件、潜在风险与缓解方案。
+      placeholder: |
+        - 依赖：
+        - 风险：
+        - 缓解：
+
